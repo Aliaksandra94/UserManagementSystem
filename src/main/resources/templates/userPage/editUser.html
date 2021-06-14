@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<link href="/css/formStyle.css" rel="stylesheet" type="text/css">
+<link href="/css/switch.css" rel="stylesheet" type="text/css">
+<link href="/css/commonStyle.css" rel="stylesheet">
+<title th:text="#{edit.User.title}"></title>
+</head>
+<body>
+<th:block th:include="i18n.html"></th:block>
+<div class="menu">
+    <h2 th:text="#{edit.details.User.title}+' '+${user.firstName}+'.'"></h2>
+    <div class="inner-menu">
+        <h4 align="right">
+            <a href="/user" th:title="#{back.UserPage.Title}" th:text="#{back.UserPage}" style="text-decoration: none" >
+                <img src="/images/RU.png" width="30px" height="30px" class="round">
+            </a>
+            <br>
+            <br>
+            <a href="/logout">
+                <img th:text="#{logout}" th:src="@{/images/exit.png}" width="40px" height="40px" style="text-decoration: none">
+            </a>
+        </h4>
+    </div>
+</div>
+<form th:method="POST" th:action="@{/user/{id}/edit(id=${user.getId()})}" th:object="${user}" class="transparent">
+    <div class="form-inner">
+        <h3 th:text="#{edit.User.title}"></h3>
+        <label for="username" th:text="#{loginPage.username}"></label>
+        <input type='text' th:field="*{username}" id="username">
+        <div align="center" style="color: #fa0404" th:text="${fieldNameError}"></div>
+
+    <br/>
+    <label for="password">Enter password: </label>
+    <input type="text" th:field="*{password}" id="password"/>
+        <div align="center" style="color: #fa0404" th:text="${fieldPassError}"></div>
+
+    <br/>
+    <label for="firstName">Enter first name: </label>
+    <input type="text" th:field="*{firstName}" id="firstName"/>
+        <div align="center" style="color: #fa0404" th:text="${fieldFirstNameError}"></div>
+
+    <br/>
+    <label for="lastName">Enter last name: </label>
+    <input type="text" th:field="*{lastName}" id="lastName"/>
+        <div align="center" style="color: #fa0404" th:text="${fieldLastNameError}"></div>
+    <br/>
+        <label for="role" th:text="#{add.new.userAccount.page.role}"></label>
+        <select required id="role" name="role">
+            <option th:each="role : ${roles}" th:value="${role.getId()}"  th:text="${role.getName().toLowerCase()}"
+                    style="background-color: lightgray; color: #4e2b44"></option>
+        </select>
+
+        <label th:text="#{add.new.userAccount.page.status}"></label>
+        <label class="switch">
+            <input type="checkbox" name="status" id="status" value="ACTIVE">
+            <span class="slider round"></span>
+        </label>
+    <input type="submit" th:value="#{edit.User.title}"/>
+    </div>
+</form>
+</body>
+</html>

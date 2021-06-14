@@ -1,0 +1,11 @@
+.menu{
+    background: linear-gradient(to right bottom, rgba(43, 44, 78, .5), rgba(104, 22, 96, .5));
+    margin-top: 0px;
+    padding-top: 3px;
+    padding-left: 25px;
+    padding-right: 5px;
+}
+.inner-menu{
+    margin: 0px;
+    padding: 0px;
+}

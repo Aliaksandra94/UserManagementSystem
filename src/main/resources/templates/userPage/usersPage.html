@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<link href="/css/formStyle.css" rel="stylesheet" type="text/css">
+<link href="/css/switch.css" rel="stylesheet" type="text/css">
+<link href="/css/commonStyle.css" rel="stylesheet">
+<head>
+    <title>User</title>
+</head>
+<body>
+<th:block th:include="i18n.html"></th:block>
+<div class="menu">
+    <h2 th:text="#{userPage.message.hello}+', '+${username}+'!'"></h2>
+    <div class="inner-menu">
+        <h3 align="right"><a href="/logout">
+            <img th:text="#{logout}" th:src="@{/images/exit.png}" width="40px" height="40px"></a></h3>
+    </div>
+    <div class="inner-menu">
+        <h4 th:text="#{userPage.message.role}+' '+${roles} +
+        '. | ' +#{userPage.message.status}+' '+${status.toString().toLowerCase()}+'.'" align="left"> .
+        </h4>
+    </div>
+</div>
+
+<form th:method="post" th:action="@{/user}">
+    <input type="hidden" name="form" value="findByRole"/>
+    <label th:text="#{add.new.userAccount.page.role}"></label>
+    <select required name="roleId">
+        <option th:text="#{add.new.userAccount.page.role.default}" th:readonly="true">
+        <option th:each="role : ${listOfRoles}" th:value="${role.id}" th:text="${role.name.toLowerCase()}"
+                style="background-color: lightgray; color: #4e2b44"></option>
+    </select>
+    <button type="submit" style="border: none; background: none"><img src="/images/search.png" width="30px"
+                                                                      height="30px" alt="Find" border="0px">
+    </button>
+</form>
+<form th:method="post" th:action="@{/user}">
+    <input type="hidden" name="form" value="findByUserName"/>
+    <label th:text="#{loginPage.username}"></label>
+    <input type="text" name="name">
+    <button type="submit" style="border: none; background: none"><img src="/images/search.png" width="30px"
+                                                                      height="30px" alt="Find" border="0px">
+    </button>
+</form>
+<table border="1" align="center">
+    <tr>
+        <th>№</th>
+        <th th:text="#{listUsers.userPage}"></th>
+        <th th:text="#{startPage.username}"></th>
+        <th th:text="#{add.new.userAccount.page.role}"></th>
+        <th th:if="${roles.contains('user')}" th:utext="#{action.userPage}"></th>
+        <th th:if="${roles.contains('admin')}" colspan="2" th:utext="#{action.userPage}"></th>
+        <th th:utext="#{add.new.userAccount.page.status}"></th>
+    </tr>
+
+    <tr th:each="user, iter : ${usersList}">
+        <td th:utext="${iter.count}">№</td>
+        <td th:utext="${user.firstName}">Users</td>
+        <td th:utext="${user.username}">№</td>
+        <td th:utext="${user.usersRoleList}">Users</td>
+        <td><a th:href="@{/user/{id}(id=${user.getId()})}" th:text="#{show.detailed.userAccount}"></a></td>
+
+        <td th:if="${roles.contains('admin')}" style="padding-: 5 0 5"><a
+                th:href="@{/user/{id}/edit(id=${user.getId()})}"
+                th:text="#{edit.User.title}">view</a></td>
+
+        <td align="center">
+            <label class="switch">
+                <input type="checkbox" th:if="${user.status.name().equalsIgnoreCase('active')}" th:checked="checked"
+                       disabled>
+                <span class="slider round"></span>
+            </label></td>
+    </tr>
+</table>
+<br>
+<br>
+<div align="center">
+    <label th:text="#{userPage.pages}"></label>
+    <a th:if="${usersList.totalPages > 0}"
+       th:each="pageNumber : ${pageNumbers}"
+       th:href="@{/user(size=${usersList.size}, page=${pageNumber})}"
+       th:text="${pageNumber}"
+       th:class="${pageNumber==usersList.number + 1} ? active" style="text-decoration: none"><span style="margin-right: 3px"/> </a>  &emsp;
+</div>
+    <br>
+<br>
+<a th:if="${roles.contains('admin')}" th:href="@{/user/new}" th:text="#{add.new.userAccount.page.title}"></a></td>
+<br>
+</body>
+</html>

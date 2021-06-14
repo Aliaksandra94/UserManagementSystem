@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title><h1 th:text="#{loginPage.login}"></h1></title>
+    <link href="/css/formStyle.css" rel="stylesheet" type="text/css">
+
+</head>
+<body>
+<th:block th:include="i18n.html"></th:block>
+<form th:action="@{/login}" method='POST' class="transparent">
+    <div align="center" style="color: #bc1b1b; font-size: larger;" th:text="${msg}"></div>
+        <div class="form-inner">
+            <h3 th:text="#{loginPage.login}"></h3>
+            <label for="username" th:text="#{loginPage.username}"></label>
+            <input required type='text' id="username" name='username' value=''>
+            <label for="password" th:text="#{loginPage.password}"></label>
+            <input required type='password' id="password" name='password' value=''/>
+            <input type="submit" name="submit" th:value="#{loginPage.label.submit}">
+        </div>
+    </form>
+<br>
+
+</body>
+</html>

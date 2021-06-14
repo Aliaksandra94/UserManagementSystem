@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link href="/css/formStyle.css" rel="stylesheet" type="text/css">
+    <link href="/css/switch.css" rel="stylesheet" type="text/css">
+    <link href="/css/commonStyle.css" rel="stylesheet">
+    <title th:text="#{show.userAccount.page.title}"></title>
+</head>
+<body>
+<th:block th:include="i18n.html"></th:block>
+<div class="menu">
+    <h2 th:text="#{details.User.title}+' '+${user.firstName}+'.'"></h2>
+    <div class="inner-menu">
+        <h4 align="right">
+            <a href="/user" th:title="#{back.UserPage.Title}" th:text="#{back.UserPage}" style="text-decoration: none">
+                <img src="/images/RU.png" width="30px" height="30px" class="round">
+            </a>
+            <br>
+            <br>
+            <a href="/logout">
+                <img th:text="#{logout}" th:src="@{/images/exit.png}" width="40px" height="40px" style="text-decoration: none">
+            </a>
+        </h4>
+    </div>
+</div>
+</body>
+<form th:method="POST" th:action="@{/user/{id}(id=${user.getId()})}" th:object="${user}" class="transparent">
+    <div class="form-inner">
+        <h3 th:text="#{show.userAccount.page.title}"></h3>
+        <label for="username" th:text="#{loginPage.username}"></label>
+        <input type='text' id="username" th:field="*{username}" readonly>
+
+        <label for="firstName" th:text="#{add.new.userAccount.page.firstName}"></label>
+        <input type='text' id="firstName" th:field="*{firstName}" readonly/>
+
+        <label for="lastName" th:text="#{add.new.userAccount.page.lastName}"></label>
+        <input type='text' id="lastName" th:field="*{lastName}" readonly/>
+
+        <label for="role" th:text="#{add.new.userAccount.page.role}"></label>
+        <input type='text' id="role" th:field="*{usersRoleList}" readonly/>
+
+        <label for="status" th:text="#{add.new.userAccount.page.status}"></label>
+        <input type='text' id="status"  th:value="${user.status.toString().toLowerCase()}" readonly/>
+    </div>
+</form>
+</html>
+
+</div>
