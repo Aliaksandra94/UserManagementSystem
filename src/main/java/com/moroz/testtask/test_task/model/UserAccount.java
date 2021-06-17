@@ -153,4 +153,18 @@ public class UserAccount implements UserDetails {
                 userAccount.isCredentialsNonExpired(),
                 userAccount.isAccountNonLocked(), userAccount.getAuthorities());
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        UserAccount that = (UserAccount) o;
+        return id == that.id &&
+                Objects.equals(username, that.username);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, username);
+    }
 }
