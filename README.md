@@ -3,12 +3,7 @@ Test task - User Management System.
 A WEB application that represents the user management interface (with i18n).
 
 Before running the test of this web_app, please, follow the below instruction: 
-1. Create DB and fill it on the    application.properties - file. 
-2. Check that property  **spring.jpa.hibernate.ddl-auto=create**, start the web-app (for initialize DB with tables accoriding the Entities).
-3. Change **spring.jpa.hibernate.ddl-auto=update**,  than transfer file "data.sql" from the folder resources/templates/database/data.sql  to  the folder resources and restart web-app again (to initialize DB with initial data).
-4. Back file "data.sql"  to  the folder resources/templates/database/ .
-
-
+Create DB and fill it on the    application.properties - file. 
 
 USER Role:
 Available actions: Authorization; View the list of users; View any user's details; Logout.
