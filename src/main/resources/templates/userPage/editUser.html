@@ -46,16 +46,16 @@
     <br/>
         <label for="role" th:text="#{add.new.userAccount.page.role}"></label>
         <select required id="role" name="role">
-            <option th:each="role : ${roles}" th:value="${role.getId()}"  th:text="${role.getName().toLowerCase()}"
+            <option th:each="role : ${roles}"  th:selected="${user.getUsersRole()}"  th:value="${role.getId()}"  th:text="${role.getName().toLowerCase()}"
                     style="background-color: lightgray; color: #4e2b44"></option>
         </select>
 
         <label th:text="#{add.new.userAccount.page.status}"></label>
         <label class="switch">
-            <input type="checkbox" name="status" id="status" value="ACTIVE">
+            <input type="checkbox" name="status" id="status" value="ACTIVE" th:if="${user.status.name().equalsIgnoreCase('active')}" th:checked="checked">
             <span class="slider round"></span>
         </label>
-    <input type="submit" th:value="#{edit.User.title}"/>
+    <input type="submit" th:value="#{save.edit.User}"/>
     </div>
 </form>
 </body>

@@ -55,8 +55,8 @@
     <tr th:each="user, iter : ${usersList}">
         <td th:utext="${iter.count}">№</td>
         <td th:utext="${user.firstName}">Users</td>
-        <td th:utext="${user.username}">№</td>
-        <td th:utext="${user.usersRole}">Users</td>
+        <td th:utext="${user.username}"></td>
+        <td th:utext="${user.usersRole}"></td>
         <td><a th:href="@{/user/{id}(id=${user.getId()})}" th:text="#{show.detailed.userAccount}"></a></td>
 
         <td th:if="${roles.contains('admin')}" style="padding-: 5 0 5"><a

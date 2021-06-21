@@ -66,9 +66,17 @@ public class UsersPageController {
             }
         }
     }
+    public void getPagination(Model model, int totalPages){
+        if (totalPages > 0) {
+            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
+                    .boxed()
+                    .collect(Collectors.toList());
+            model.addAttribute("pageNumbers", pageNumbers);
+        }
+    }
 
     @GetMapping
-    public String showAllUsers(HttpServletRequest request, @RequestParam("page") Optional<Integer> page,
+    public String showAllUsers(@RequestParam("page") Optional<Integer> page,
                                @RequestParam("size") Optional<Integer> size,
                                Model model) {
         getCurrentUser(model);
@@ -76,13 +84,7 @@ public class UsersPageController {
         int pageSize = size.orElse(3);
         Page<UserAccount> usersPage = userService.returnAllUserAccountList(PageRequest.of(currentPage - 1, pageSize));
         model.addAttribute("usersList", usersPage);
-        int totalPages = usersPage.getTotalPages();
-        if (totalPages > 0) {
-            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
-                    .boxed()
-                    .collect(Collectors.toList());
-            model.addAttribute("pageNumbers", pageNumbers);
-        }
+        getPagination(model, usersPage.getTotalPages());
         model.addAttribute("listOfRoles", roleService.returnAllRoles());
         return "userPage/usersPage";
     }
@@ -91,20 +93,17 @@ public class UsersPageController {
     public String changeStatus(HttpServletRequest request,
                                @RequestParam("page") Optional<Integer> page,
                                @RequestParam("size") Optional<Integer> size, Model model) {
-        List<UserAccount> users = new ArrayList<>();
+        Page<UserAccount> usersPage = null;
         int currentPage = page.orElse(1);
         int pageSize = size.orElse(3);
         if (request.getParameter("form").equals("findByRole")) {
             try {
                 long roleId = Long.parseLong(request.getParameter("roleId"));
                 if (roleId == 0) {
-                    currentPage = page.orElse(1);
-                    pageSize = size.orElse(3);
-                    users = userService.returnAllUserAccountList(PageRequest.of(currentPage - 1, pageSize)).getContent();
+                    usersPage = userService.returnAllUserAccountList(PageRequest.of(currentPage - 1, pageSize));
                 } else {
-                    users = userService.returnUsersByRoleId(roleId, PageRequest.of(currentPage - 1, pageSize)).getContent();
+                    usersPage = userService.returnUsersByRoleId(roleId, PageRequest.of(currentPage - 1, pageSize));
                 }
-                getCurrentUser(model);
             } catch (NumberFormatException e) {
                 getCurrentUser(model);
                 String errorType = messageSource.getMessage("error.wrongType", new Object[]{"error.wrongType"}, LocaleContextHolder.getLocale());
@@ -113,10 +112,14 @@ public class UsersPageController {
         }
         if (request.getParameter("form").equals("findByUserName")) {
             String name = request.getParameter("name");
-            users = userService.findByPartOfUsername(name, PageRequest.of(currentPage - 1, pageSize)).getContent();
-            getCurrentUser(model);
+            if(name.isEmpty() || name.equals("") || name==null){
+                usersPage = userService.returnAllUserAccountList(PageRequest.of(currentPage - 1, pageSize));
+            } else{
+            usersPage = userService.findByPartOfUsername(name, PageRequest.of(currentPage - 1, pageSize));}
         }
-        model.addAttribute("usersList", users);
+        getPagination(model, usersPage.getTotalPages());
+        getCurrentUser(model);
+        model.addAttribute("usersList", usersPage);
         model.addAttribute("listOfRoles", roleService.returnAllRoles());
         return "userPage/usersPage";
     }
