@@ -2,9 +2,8 @@
 Test task - User Management System.
 A WEB application that represents the user management interface (with i18n).
 
-**Before running the test of this web_app, please, follow the below instruction: **
-
-Create DB and fill it on the    application.properties - file. 
+Instructions:
+**Before running the test of this web_app, please, Create DB and fill it on the    application.properties - file. 
 
 USER Role:
 Available actions: Authorization; View the list of users; View any user's details; Logout.
