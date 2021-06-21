@@ -14,15 +14,15 @@ public class Role implements GrantedAuthority {
     long id;
     @Column(name = "role_name")
     String name;
-    @ManyToMany(mappedBy = "usersRoleList")
-    Set<UserAccount> usersAccountList;
+    @ManyToMany(mappedBy = "usersRole")
+    Set<UserAccount> usersAccount;
 
     public Role() {
     }
 
-    public Role(String name, Set<UserAccount> usersAccountList) {
+    public Role(String name, Set<UserAccount> usersAccount) {
         this.name = name;
-        this.usersAccountList = usersAccountList;
+        this.usersAccount = usersAccount;
     }
 
     public long getId() {
@@ -41,12 +41,12 @@ public class Role implements GrantedAuthority {
         this.name = name;
     }
 
-    public Set<UserAccount> getUsersAccountList() {
-        return usersAccountList;
+    public Set<UserAccount> getUsersAccount() {
+        return usersAccount;
     }
 
-    public void setUsersAccountList(Set<UserAccount> usersAccountList) {
-        this.usersAccountList = usersAccountList;
+    public void setUsersAccount(Set<UserAccount> usersAccountList) {
+        this.usersAccount = usersAccountList;
     }
 
     @Override

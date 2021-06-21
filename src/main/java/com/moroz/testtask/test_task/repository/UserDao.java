@@ -17,6 +17,6 @@ public interface UserDao extends JpaRepository<UserAccount, Long> {
     Page<UserAccount> findByPartOfUsername(String partOfUsername, Pageable pageable);
     @Query(value = "select from users_account where username ilike concat('%',:partOfUsername,'%')", nativeQuery = true)
     Page<UserAccount> findByPartOfUsernameIgnoreCase(String partOfUsername, Pageable pageable);
-    @Query(value = "select r.usersAccountList from Role r where r.id =:id")
+    @Query(value = "select r.usersAccount from Role r where r.id =:id")
     Page<UserAccount> findByRoleId(long id, Pageable pageable);
 }
