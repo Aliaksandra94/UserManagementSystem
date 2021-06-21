@@ -37,7 +37,7 @@
         <input type='text' id="lastName" th:field="*{lastName}" readonly/>
 
         <label for="role" th:text="#{add.new.userAccount.page.role}"></label>
-        <input type='text' id="role" th:field="*{usersRoleList}" readonly/>
+        <input type='text' id="role" th:field="*{usersRole}" readonly/>
 
         <label for="status" th:text="#{add.new.userAccount.page.status}"></label>
         <input type='text' id="status"  th:value="${user.status.toString().toLowerCase()}" readonly/>

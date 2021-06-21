@@ -1,21 +1,15 @@
 package com.moroz.testtask.test_task.controller;
 
-import com.moroz.testtask.test_task.model.Role;
 import com.moroz.testtask.test_task.model.Status;
 import com.moroz.testtask.test_task.model.UserAccount;
 import com.moroz.testtask.test_task.service.interfaces.RoleService;
 import com.moroz.testtask.test_task.service.interfaces.UserService;
 import com.moroz.testtask.test_task.validator.FormValidator;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
-import org.springframework.http.HttpRequest;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -27,8 +21,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
-import java.security.Principal;
-import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -70,7 +62,7 @@ public class UsersPageController {
                 UserAccount userAccount = (UserAccount) userService.returnUserAccountByUserName(name);
                 model.addAttribute("username", userAccount.getFirstName());
                 model.addAttribute("status", userAccount.getStatus());
-                model.addAttribute("roles", userAccount.getUsersRoleList().toString());
+                model.addAttribute("roles", userAccount.getUsersRole().toString());
             }
         }
     }
@@ -100,10 +92,19 @@ public class UsersPageController {
                                @RequestParam("page") Optional<Integer> page,
                                @RequestParam("size") Optional<Integer> size, Model model) {
         List<UserAccount> users = new ArrayList<>();
+        int currentPage = page.orElse(1);
+        int pageSize = size.orElse(3);
         if (request.getParameter("form").equals("findByRole")) {
             try {
                 long roleId = Long.parseLong(request.getParameter("roleId"));
-                users = userService.returnUsersByRoleId(roleId, PageRequest.of(page.get()-1, size.get())).getContent();
+                if (roleId == 0) {
+                    currentPage = page.orElse(1);
+                    pageSize = size.orElse(3);
+                    users = userService.returnAllUserAccountList(PageRequest.of(currentPage - 1, pageSize)).getContent();
+                } else {
+                    users = userService.returnUsersByRoleId(roleId, PageRequest.of(currentPage - 1, pageSize)).getContent();
+                }
+                getCurrentUser(model);
             } catch (NumberFormatException e) {
                 getCurrentUser(model);
                 String errorType = messageSource.getMessage("error.wrongType", new Object[]{"error.wrongType"}, LocaleContextHolder.getLocale());
@@ -112,12 +113,12 @@ public class UsersPageController {
         }
         if (request.getParameter("form").equals("findByUserName")) {
             String name = request.getParameter("name");
-            users = userService.findByPartOfUsername(name, PageRequest.of(page.get()-1, size.get())).getContent();
+            users = userService.findByPartOfUsername(name, PageRequest.of(currentPage - 1, pageSize)).getContent();
             getCurrentUser(model);
         }
-            model.addAttribute("usersList", users);
-            model.addAttribute("listOfRoles", roleService.returnAllRoles());
-            return "userPage/usersPage";
+        model.addAttribute("usersList", users);
+        model.addAttribute("listOfRoles", roleService.returnAllRoles());
+        return "userPage/usersPage";
     }
 
     @GetMapping("/new")

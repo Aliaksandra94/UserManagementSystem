@@ -10,12 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.LockedException;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -63,7 +59,7 @@ public class UserServiceImpl implements UserService {
     public void saveNewUserAccount(UserAccount userAccount, long roleID, String status) {
         Set<Role> roles = new HashSet<>();
         roles.add(roleDao.getById(roleID));
-        userAccount.setUsersRoleList(roles);
+        userAccount.setUsersRole(roles);
         userAccount.setStatus(Status.valueOf(status));
         userAccount.setCreatedAt(LocalDate.now());
         userAccount.setPassword(passwordEncoder.encode(userAccount.getPassword()));
@@ -123,7 +119,7 @@ public class UserServiceImpl implements UserService {
         userToUpdate.setLastName(userAccount.getLastName());
         Set<Role> roles = new HashSet<>();
         roles.add(roleDao.getById(roleID));
-        userToUpdate.setUsersRoleList(roles);
+        userToUpdate.setUsersRole(roles);
         userToUpdate.setStatus(Status.valueOf(status));
         userDao.save(userToUpdate);
     }

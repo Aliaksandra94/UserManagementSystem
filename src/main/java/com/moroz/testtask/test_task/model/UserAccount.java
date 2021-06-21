@@ -3,7 +3,6 @@ package com.moroz.testtask.test_task.model;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
@@ -16,19 +15,20 @@ import java.util.*;
 @Table(name = "users_account")
 public class UserAccount implements UserDetails {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    long id;
+    @SequenceGenerator(name = "seq", sequenceName = "user_id_seq", allocationSize = 1, initialValue = 4)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq")
+    private long id;
     @Column(name = "username", unique = true, nullable = false, length = 16)
-    String username;
+    private String username;
     @Column(name = "password", nullable = false, length = 2048)
-    String password;
+    private String password;
     @Column(name = "first_name", nullable = false, length = 16)
-    String firstName;
-    String lastName;
+    private String firstName;
+    private String lastName;
     @ManyToMany(fetch = FetchType.EAGER)
-    Set<Role> usersRoleList;
-    Status status;
-    LocalDate createdAt;
+    private Set<Role> usersRole = new HashSet<>();
+    private Status status;
+    private LocalDate createdAt;
 
     public UserAccount() {
     }
@@ -37,13 +37,13 @@ public class UserAccount implements UserDetails {
                        @Size(min = 3, max = 16) @Pattern(regexp = "(?=(.*\\d){1})(?=(.*[a-zA-Z]){1}).[a-zA-Z0-9]{3,16}") String password,
                        @Size(min = 1, max = 16) @Pattern(regexp = "[a-zA-Z]{1,16}") String firstName,
                        @Size(min = 1, max = 16) @Pattern(regexp = "[a-zA-Z]{1,16}") String lastName,
-                       Set<Role> usersRoleList,
+                       Set<Role> usersRole,
                        Status status, LocalDate createdAt) {
         this.username = username;
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.usersRoleList = usersRoleList;
+        this.usersRole = usersRole;
         this.status = status;
         this.createdAt = createdAt;
     }
@@ -88,12 +88,12 @@ public class UserAccount implements UserDetails {
         this.lastName = lastName;
     }
 
-    public Set<Role> getUsersRoleList() {
-        return usersRoleList;
+    public Set<Role> getUsersRole() {
+        return usersRole;
     }
 
-    public void setUsersRoleList(Set<Role> usersRoleList) {
-        this.usersRoleList = usersRoleList;
+    public void setUsersRole(Set<Role> usersRoleList) {
+        this.usersRole = usersRoleList;
     }
 
     public Status getStatus() {
@@ -107,7 +107,7 @@ public class UserAccount implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Set<GrantedAuthority> list = new HashSet<>();
-        for (Role role : usersRoleList) {
+        for (Role role : usersRole) {
             list.add(new SimpleGrantedAuthority(role.getName()));
         }
         return list;

@@ -25,7 +25,7 @@
     <input type="hidden" name="form" value="findByRole"/>
     <label th:text="#{add.new.userAccount.page.role}"></label>
     <select required name="roleId">
-        <option th:text="#{add.new.userAccount.page.role.default}" th:readonly="true">
+        <option th:text="#{find.userAccount.byRole.default}" th:value="0">
         <option th:each="role : ${listOfRoles}" th:value="${role.id}" th:text="${role.name.toLowerCase()}"
                 style="background-color: lightgray; color: #4e2b44"></option>
     </select>
@@ -56,7 +56,7 @@
         <td th:utext="${iter.count}">№</td>
         <td th:utext="${user.firstName}">Users</td>
         <td th:utext="${user.username}">№</td>
-        <td th:utext="${user.usersRoleList}">Users</td>
+        <td th:utext="${user.usersRole}">Users</td>
         <td><a th:href="@{/user/{id}(id=${user.getId()})}" th:text="#{show.detailed.userAccount}"></a></td>
 
         <td th:if="${roles.contains('admin')}" style="padding-: 5 0 5"><a
